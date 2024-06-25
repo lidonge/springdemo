@@ -7,6 +7,7 @@ import springdemo.order.models.Order;
 import springdemo.order.models.OrderItem;
 import springdemo.product.models.Product;
 import org.springframework.transaction.annotation.Transactional;
+import springdemo.users.models.AppUser;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +23,8 @@ public class OrderService {
     private final OrderItemRepository orderItemRepository;
     @Autowired
     private ProductService productService;
+    @Autowired
+    private UserService userService;
 
     @Autowired
     public OrderService(OrderRepository orderRepository, OrderItemRepository orderItemRepository) {
@@ -35,6 +38,8 @@ public class OrderService {
 
     public Order getOrder(Long id) {
         Order ret = orderRepository.findById(id).orElse(null);
+        AppUser user = userService.findById(ret.getCustomerId()).orElse(null);
+        ret.setCustomerName(user.getName());
         for (OrderItem item :ret.getItems()){
             Optional<Product> productOpt = productService.findProductById(item.getProductId());
             if (productOpt.isPresent()) {
@@ -60,6 +65,8 @@ public class OrderService {
             OrderItem theItem = orderItemRepository.save(item);
         }
         order.setItems(items);
+        AppUser user = userService.findById(order.getCustomerId()).orElse(null);
+        order.setCustomerName(user.getName());
         Order theOrder = orderRepository.save(order);
     }
 }

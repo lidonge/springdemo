@@ -15,6 +15,7 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private Long customerId;
     private String customerName;
     private Date orderDate;
     private Double totalAmount;
@@ -23,6 +24,14 @@ public class Order {
     private List<OrderItem> items; // Many-to-Many relationship with OrderItem
 
     // Getters and Setters
+
+    public Long getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
+    }
 
     public Long getId() {
         return id;

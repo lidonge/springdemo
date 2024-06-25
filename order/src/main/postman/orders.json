@@ -1,6 +1,6 @@
 {
   "order": {
-    "customerName": "petter",
+    "customerId": 1,
     "orderDate": "2023-07-01",
     "totalAmount": 261.33
   },
