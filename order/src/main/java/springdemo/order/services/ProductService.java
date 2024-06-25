@@ -14,6 +14,8 @@ import springdemo.product.models.Product;
 
 import java.util.Optional;
 
+import static com.alicp.jetcache.anno.CacheType.LOCAL;
+
 @Service
 public class ProductService {
 
@@ -32,7 +34,7 @@ public class ProductService {
         return proxy.findById(id);
     }
 
-    @Cached(name="productCache-", key="#id", expire = 3600)
+    @Cached(name="productCache-", key="#id", expire = 3600, cacheType = LOCAL)
     public Optional<Product> findById(Long id) {
         try {
             Product product = null;

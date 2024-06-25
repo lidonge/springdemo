@@ -10,6 +10,8 @@ import springdemo.users.models.AppUser;
 
 import java.util.Optional;
 
+import static com.alicp.jetcache.anno.CacheType.LOCAL;
+
 @Service
 public class UserService {
 
@@ -19,7 +21,7 @@ public class UserService {
     private ApplicationContext applicationContext;
     private final String userServiceUrl = "http://localhost:8081/users";
 
-    @Cached(name="userCache-", key="#id", expire = 3600)
+    @Cached(name="userCache-", key="#id", expire = 3600, cacheType = LOCAL)
     public Optional<AppUser> findById(Long id) {
         try {
             AppUser product = restTemplate.getForObject(userServiceUrl + "/" + id, AppUser.class);
