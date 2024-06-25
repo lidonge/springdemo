@@ -1,12 +1,13 @@
 package springdemo.order.services;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import springdemo.order.handlers.OrderItemRepository;
 import springdemo.order.handlers.OrderRepository;
 import springdemo.order.models.Order;
 import springdemo.order.models.OrderItem;
 import springdemo.product.models.Product;
-import org.springframework.transaction.annotation.Transactional;
 import springdemo.users.models.AppUser;
 
 import java.util.List;
