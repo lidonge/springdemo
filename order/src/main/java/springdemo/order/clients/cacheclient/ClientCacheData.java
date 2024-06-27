@@ -8,6 +8,7 @@ import cache.IClientCacheData;
 public class ClientCacheData implements IClientCacheData {
     private boolean bPrepared = false;
     private Object value;
+
     @Override
     public boolean isPrepareDirty() {
         return bPrepared;
@@ -26,5 +27,12 @@ public class ClientCacheData implements IClientCacheData {
     public ClientCacheData setValue(Object value) {
         this.value = value;
         return this;
+    }
+    @Override
+    public IClientCacheData clone() {
+        ClientCacheData ret = new ClientCacheData();
+        ret.value = value;
+        ret.bPrepared = bPrepared;
+        return ret;
     }
 }

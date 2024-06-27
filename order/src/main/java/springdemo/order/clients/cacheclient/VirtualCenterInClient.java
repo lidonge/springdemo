@@ -33,23 +33,7 @@ public class VirtualCenterInClient implements IVirtualCenterInClient {
     @Override
     public ICacheData get(String compKey) {
         AppUser user = center.getUser(compKey);;
-        return new IClientCacheData() {
-            boolean bPrepareDirty;
-            @Override
-            public boolean isPrepareDirty() {
-                return bPrepareDirty;
-            }
-
-            @Override
-            public void setPrepareDirty(boolean b) {
-                bPrepareDirty = b;
-            }
-
-            @Override
-            public Object getValue() {
-                return user;
-            }
-        };
+        return new ClientCacheData().setValue(user);
     }
 
     @Override
