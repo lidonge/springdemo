@@ -39,7 +39,8 @@ public class OrderService {
 
     public Order getOrder(Long id) {
         Order ret = orderRepository.findById(id).orElse(null);
-        AppUser user = userService.findById(ret.getCustomerId()).orElse(null);
+        Optional<AppUser> optionalAppUser = userService.findById(ret.getCustomerId());
+        AppUser user = optionalAppUser.orElse(null);
         ret.setCustomerName(user.getName());
         for (OrderItem item :ret.getItems()){
             Optional<Product> productOpt = productService.findProductById(item.getProductId());
