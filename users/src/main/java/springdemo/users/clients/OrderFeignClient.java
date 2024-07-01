@@ -9,10 +9,10 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import springdemo.users.configs.FeignConfig;
 
-@FeignClient(name = "order-service")
-public interface OrderFeignClient extends PrepareClient{
-    @Override
+@FeignClient(name = "order-service", configuration = FeignConfig.class)
+public interface OrderFeignClient{
     @PostMapping("/orders/cache/prepareDirty/{compKey}")
     void prepareDirty(@PathVariable("compKey") String compKey);
 }

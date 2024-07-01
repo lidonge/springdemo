@@ -13,9 +13,6 @@ import springdemo.users.models.AppUser;
 public class VirtualCenterInClient implements IVirtualCenterInClient {
     @Autowired
     private UserFeignClient center;
-    //FIXME here is hard code
-    static final String CENTER_NAME = "user-service";
-    static final String CLIENT_NAME = "order-service";
 
     public VirtualCenterInClient() {
     }

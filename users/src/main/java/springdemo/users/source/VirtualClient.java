@@ -2,34 +2,33 @@ package springdemo.users.source;
 
 import cache.IAsynListener;
 import cache.IVirtualClient;
-import springdemo.users.clients.PrepareClient;
+import cache.util.ILogable;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
+import springdemo.users.clients.DynamicFeignClient;
+import springdemo.users.clients.OrderFeignClient;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * @author lidong@date 2023-10-25@version 1.0
  */
-public class VirtualClient implements IVirtualClient {
+public class VirtualClient implements IVirtualClient, ILogable {
 
-//    @Autowired
-//    private OrderFeignClient client;
-
-    private PrepareClient prepareClient;
+    private DiscoveryClient discoveryClient;
 
     private Map<String, Boolean> keysMap = new HashMap<>();
 
     //FIXME hard code
     private String name = "order-service";
 
-    public VirtualClient(String name, PrepareClient discoveryClient) {
+    public VirtualClient(String name, DiscoveryClient discoveryClient) {
         this.name = name;
-        this.prepareClient = discoveryClient;
+        this.discoveryClient = discoveryClient;
     }
 
-    public PrepareClient getPrepareClient() {
-        return prepareClient;
-    }
 
     @Override
     public String getName() {
@@ -38,18 +37,19 @@ public class VirtualClient implements IVirtualClient {
 
     @Override
     public void prepareDirty(String compKey, IAsynListener listener) {
-        //TODO
-//        List<ServiceInstance> instances = discoveryClient.getInstances(name);
-//        if (instances == null || instances.isEmpty()) {
-//            throw new IllegalArgumentException("No instances found for service: " + name);
-//        }
-//        String url = instances.get(0).getUri().toString();  // 获取第一个实例的URL
-//        DynamicFeignClient client = Feign.builder()
-////                .encoder(new JacksonEncoder())
-////                .decoder(new JacksonDecoder())
-//                .target(DynamicFeignClient.class, url);
-        prepareClient.prepareDirty(compKey);
+        dynFeignClient(compKey).prepareDirty(compKey);
         listener.onSuccess();
+    }
+
+    private OrderFeignClient dynFeignClient(String compKey) {
+        List<ServiceInstance> instances = discoveryClient.getInstances(name);
+        if (instances == null || instances.isEmpty()) {
+            throw new IllegalArgumentException("No instances found for service: " + name);
+        }
+        String url = instances.get(0).getUri().toString();  // 获取第一个实例的URL
+        getLogger().info("Get {}'s url:{}", name,url);
+        DynamicFeignClient dynamicFeignClient = new DynamicFeignClient();
+        return dynamicFeignClient.createOrderServiceClient(url);
     }
 
     @Override
